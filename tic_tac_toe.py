@@ -1,3 +1,13 @@
+"""
+    x[0] o[1] -[2]
+    -[3] -[4] -[5]
+    -[6] -[7] -[8]
+
+    col-1 col+1 row-1 row+1
+
+    1 2
+"""
+
 import random
 
 class Agent:
@@ -53,18 +63,31 @@ class Agent:
         return [False, states]
     
     def find_move(self, game_arr, num_moves):
+        game_2d_arr = []
+        start = 0
+        while(start<len(game_arr)):
+            game_2d_arr.append(game_arr[start:start+3])
+            start+=3
         if(num_moves==0):
             move=random.choice([0,2,6,8])
         else:
             opponents_pawn = "x" if(self.pawn=="o") else "o"
             opponent_winning = self.check_if_agent_is_winning(game_arr, opponents_pawn)
             me_winning = self.check_if_agent_is_winning(game_arr, self.pawn)
-            if(opponent_winning[0]):
-                move = opponent_winning[1]
-            elif(me_winning[0]):
+            if(me_winning[0]):
                 move = me_winning[1]
+            elif(opponent_winning[0]):
+                move = opponent_winning[1]
             else:
-                pass
+                for i in range(3):
+                    for j in range(3):
+                        if(game_2d_arr[i][j]==self.pawn):
+                            prev_row = (i-1)%3
+                            next_row = (i+1)%3 
+                            prev_col = (j-1)%3 
+                            next_col = (j+1)%3 
+                            if(game_2d_arr[prev_row][j]=="-"):
+                                
 
         return move
 
