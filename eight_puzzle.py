@@ -1,58 +1,53 @@
-class Queue:
-    def __init__(self, type):
-        self.type = type #fifo or lifo
-        self.que = []
-
-    def push(self, data):
-        self.que.append(data)
-
-    def pop(self):
-        if(self.type=="lifo"):
-            return self.que.pop(-1)
-        elif(self.type=="fifo"):
-            return self.que.pop(0)
-
-
-class Node:
-    def __init__(self, data, parent):
-        self.data = data
-        self.parent = parent
-        if(parent is not(None)):
-            self.parent.children.append(self)
-        self.children = []
-
-
-class BFS:
-    def __init__(self, root_node):
-        self.root_node = root_node
-        self.queue = Queue("fifo")
-        self.queue.push(self.root_node)
-        self.order = []
+class Game:
+    def __init__(self):
+        game_arr_inp = list(int x for x in input("Enter the game array: ").split(" "))
+        val_game_inp = validate_game_input(game_arr_inp)
+        if(not(val_game_inp)):
+            print("Invalid game array!")
+            exit()
+        self.game_arr = []
+        self.goal_state = [[1,2,3],[4,5,6],[7,8,9]]
+        self.computed = {}
+        start = 0
+        while(start<=len(game_arr_inp)):
+            self.game_arr.append(game_arr_inp[start:start+3])
+            start+=3
     
-    def recurse(self, node):
-        self.order.append(node.data)
-        for child in node.children:
-            self.queue.push(child)
-        self.recurse(self.queue.pop())
-
-
-class DFS:
-    def __init__(self, root_node):
-        self.root_node = root_node
-        self.queue = Queue("lifo")
+    def check_if_game_over(self, board_state):
+        return True if(board_state==self.goal_state) else False
     
-    def recurse(self, node):
+    @staticmethod
+    def find_empty(board_state):
+        for row_num,row in enumerate(board_state):
+            for col_num,element in enumerate(row):
+                if(element=="-"):
+                    return [row_num, col_num]
+
+    # direction is 0: left, 1: up, 2: down, 3: right
+
+    @staticmethod
+    def get_move(board_state, direction):
+        empty_idx = find_empty(board_state)
         pass
     
+    @staticmethod
+    def get_board_state_on_move(move):
+        pass
 
-if __name__=='__main__':
-    node_0 = Node("0", None)
-    node_1 = Node("1", node_0)
-    node_2 = Node("2", node_0)
-    node_3 = Node("3", node_0)
-    node_4 = Node("4", node_1)
-    node_5 = Node("5", node_1)
+    def recurse(self, board_state):
+        if(str(board_state) in self.computed.keys()):
+            return self.computed[str(board_state)]
+        if(self.check_if_game_over(board_state)):
+            return True
+        else:
+            pass
 
-    bfs = BFS(node_0)
-    bfs.recurse(bfs.root_node)
-    print(bfs.order)
+    @staticmethod
+    def validate_game_input(game_arr_inp):
+        for inp in game_arr_inp:
+            if(not((inp in range(1:9)) or (inp=="-"))):
+                return False
+        return True
+            
+
+
