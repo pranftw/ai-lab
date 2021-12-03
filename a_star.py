@@ -1,3 +1,4 @@
+from copy import deepcopy
 import math
 
 """
@@ -28,6 +29,7 @@ def get_hn(goal_board, board):
 	return sum
 
 def move(board, direction):
+	board = deepcopy(board)
 	empty_i,empty_j = get_orig_idx(-1,board)
 	new_i,new_j = None,None
 	if(direction==0 and empty_i-1>=0): # Up
@@ -52,6 +54,8 @@ def print_board(board):
 		
 
 def sort_by_fn(fn_vals, new_boards):
+	fn_vals = deepcopy(fn_vals)
+	new_boards = deepcopy(new_boards)
 	while(True):
 		swaps = 0
 		for i in range(1,len(fn_vals)):
@@ -83,17 +87,8 @@ def solve(goal_board, board):
 			fn_vals.append(f_n)
 			new_boards.append(new_board)
 		fn_vals,new_boards = sort_by_fn(fn_vals,new_boards);
-		for i in range(len(fn_vals)):
-			print(fn_vals[i])
-			print_board(new_boards[i])
-		break
 		for b in new_boards:
-			found = False
-			for visited in already_visited:
-				if(b==visited):
-					found = True
-					break
-			if(found is False):
+			if(b not in already_visited):
 				board = b
 				break
 	print_board(board)
@@ -107,15 +102,8 @@ if __name__=='__main__':
 	#     for j in range(0,3):
 	#         new_arr.append(int(input(f"Enter {i}{j}: ")))
 	#     board.append(new_arr)
-	board = [[1,2,3],[-1,4,6],[7,5,8]]
-	# solve(goal_board,board)
-	board1 = move(board,0)
-	print_board(board1)
-	board2 = move(board,1)
-	print_board(board2)
-	board3 = move(board,2)
-	print_board(board3)
-	board4 = move(board,3)
-	print_board(board4)
+	# board = [[1,2,3],[-1,4,6],[7,5,8]]
+	board = [[-1,1,3],[4,2,5],[7,8,6]]
+	solve(goal_board,board)
 
     
