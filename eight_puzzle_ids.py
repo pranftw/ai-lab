@@ -1,12 +1,6 @@
 from copy import deepcopy
 
-def pop(q):
-    return q.pop(0)
-
-def push(q, new_board_state):
-    q.append(new_board_state)
-
-def get_board(): # Get board from the user
+def get_board():
     board = []
     for i in range(3):
         new_row = []
@@ -19,10 +13,10 @@ def get_board(): # Get board from the user
                         break
                 except:
                     pass
-                print("Invalid input! Try again!")
-    return board
+                print("Enter valid input! Try again!")
+        board.append(new_row)
 
-def validate_board(board): # Validate the board, so that there are no duplicates by summing them all up
+def validate_board(board):
     count = []
     for _ in range(9):
         count.append(0)
@@ -37,14 +31,20 @@ def validate_board(board): # Validate the board, so that there are no duplicates
             return False
     return True
 
-def print_board(board):
-    print()
-    for i in range(len(board)):
-        print(f"{board[i][0]}\t{board[i][1]}\t{board[i][2]}\t")
-    print()
+def push(s,new_board_state):
+    s.append(new_board_state)
+
+def pop(s):
+    return s.pop(-1)
 
 def check(goal_board,board):
     return goal_board==board
+
+def print_board(board):
+    print()
+    for i in range(len(board)):
+        print(f"{board[i][0]}\t{board[i][1]}\t{board[i][2]}")
+    print()
 
 def get_empty_idx(board):
     for i in range(len(board)):
@@ -77,27 +77,40 @@ def get_all_possibilities(board):
         possibilities.append(board_x)
     return possibilities
 
-def solve(goal_board, q):
-    while(len(q)!=0):
-        board = pop(q)
-        print_board(board)
-        possibilities = get_all_possibilities(board)
-        for p in possibilities:
-            if(check(goal_board,p)):
-                print("Solved!")
-                print_board(p)
+def solve(goal_board, initial_board_state, s):
+    visited = []
+    max_depth = 0
+    while(True):
+        depth = 0
+        s = [initial_board_state]
+        while(depth<=max_depth):
+            board = pop(s)
+            visited.append(board)
+            if(check(goal_board,board)):
+                print(f"Solved! At depth {depth}.")
+                print_board(board)
                 return
-            else:
-                push(q,p)
+            possibilities = get_all_possibilities(board)
+            for p in possibilities:
+                if(p not in visited):
+                    push(s,p)
+            depth+=1
+        while(len(s)!=0):
+            board = pop(s)
+            visited.append(board)
+            if(check(goal_board,board)):
+                print(f"Solved! At depth {depth}.")
+                print_board(board)
+                return
+        max_depth+=1
 
 if __name__=='__main__':
     goal_board = [[1,2,3],[4,5,6],[7,8,-1]]
     # board = get_board()
     board = [[1,2,3],[-1,4,6],[7,5,8]]
-    if(not(validate_board(board))):
-        print("Invalid board!")
+    if(not(validate_board)):
+        print("Invalid board elements! Try again!")
         exit()
-    q = []
-    push(q,board)
-    solve(goal_board, q)
-    
+    s = []
+    push(s,board)
+    solve(goal_board,board,s)
