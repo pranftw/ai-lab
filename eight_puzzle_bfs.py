@@ -80,15 +80,14 @@ def get_all_possibilities(board):
 def solve(goal_board, q):
     while(len(q)!=0):
         board = pop(q)
+        if(check(goal_board,board)):
+            print("Solved!")
+            print_board(board)
+            return
         print_board(board)
         possibilities = get_all_possibilities(board)
         for p in possibilities:
-            if(check(goal_board,p)):
-                print("Solved!")
-                print_board(p)
-                return
-            else:
-                push(q,p)
+            push(q,p)
 
 if __name__=='__main__':
     goal_board = [[1,2,3],[4,5,6],[7,8,-1]]

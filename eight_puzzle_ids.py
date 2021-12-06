@@ -77,17 +77,17 @@ def get_all_possibilities(board):
         possibilities.append(board_x)
     return possibilities
 
-def solve(goal_board, initial_board_state, s):
-    visited = []
+def solve(goal_board, initial_board_state):
     max_depth = 0
     while(True):
+        visited = []
         depth = 0
-        s = [initial_board_state]
+        s = [deepcopy(initial_board_state)]
         while(depth<=max_depth):
-            board = pop(s)
+            board = s.pop(0)
             visited.append(board)
             if(check(goal_board,board)):
-                print(f"Solved! At depth {depth}.")
+                print(f"Solved at depth {depth}!")
                 print_board(board)
                 return
             possibilities = get_all_possibilities(board)
@@ -99,7 +99,7 @@ def solve(goal_board, initial_board_state, s):
             board = pop(s)
             visited.append(board)
             if(check(goal_board,board)):
-                print(f"Solved! At depth {depth}.")
+                print(f"Solved at depth {depth}!")
                 print_board(board)
                 return
         max_depth+=1
@@ -108,9 +108,7 @@ if __name__=='__main__':
     goal_board = [[1,2,3],[4,5,6],[7,8,-1]]
     # board = get_board()
     board = [[1,2,3],[-1,4,6],[7,5,8]]
-    if(not(validate_board)):
+    if(not(validate_board(board))):
         print("Invalid board elements! Try again!")
         exit()
-    s = []
-    push(s,board)
-    solve(goal_board,board,s)
+    solve(goal_board,board)
