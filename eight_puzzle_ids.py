@@ -1,4 +1,5 @@
 from copy import deepcopy
+import math
 
 def get_board():
     board = []
@@ -81,25 +82,25 @@ def solve(goal_board, initial_board_state):
     max_depth = 0
     while(True):
         visited = []
-        depth = 0
         s = [deepcopy(initial_board_state)]
-        while(depth<=max_depth):
-            board = s.pop(0)
+        depth = [0]
+        i = 0
+        while(depth[i]<=max_depth):
+            board = s[i]
             visited.append(board)
-            if(check(goal_board,board)):
-                print(f"Solved at depth {depth}!")
-                print_board(board)
-                return
+            curr_depth = depth[i]
             possibilities = get_all_possibilities(board)
             for p in possibilities:
                 if(p not in visited):
                     push(s,p)
-            depth+=1
+                    push(depth,curr_depth+1)
+            i+=1
         while(len(s)!=0):
             board = pop(s)
-            visited.append(board)
+            curr_depth = pop(depth)
+            print_board(board)
             if(check(goal_board,board)):
-                print(f"Solved at depth {depth}!")
+                print(f"Solved at depth {curr_depth}!")
                 print_board(board)
                 return
         max_depth+=1
