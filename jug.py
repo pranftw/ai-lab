@@ -10,40 +10,33 @@ def fill(jug, jug_capacity):
 def discard(jug):
     return 0
 
-def pour(jug1,jug2,jug1_capacity,jug2_capacity):
+def pour(jug1,jug2,jug1_capacity,jug2_capacity): #Pouring jug1 into jug2
     jug2 = jug2 + jug1
+    jug1 = 0
     if(jug2>jug2_capacity):
         jug1 = jug2 - jug2_capacity
+        jug2 = jug2_capacity
     return (jug1, jug2)
 
 def get_all_possibilities(jug1, jug2, jug1_capacity, jug2_capacity):
     possibilities = []
-    jug1_temp = jug1
-    jug2_temp = jug2
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug1 = fill(jug1, jug1_capacity)
-    possibilities.append((jug1,jug2))
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug2 = fill(jug2, jug2_capacity)
-    possibilities.append((jug1,jug2))
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug1 = discard(jug1)
-    possibilities.append((jug1,jug2))
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug2 = discard(jug2)
-    possibilities.append((jug1,jug2))
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug1,jug2 = pour(jug1,jug2,jug1_capacity,jug2_capacity)
-    possibilities.append((jug1,jug2))
-    jug1 = jug1_temp
-    jug2 = jug2_temp
-    jug2,jug1 = pour(jug2,jug1,jug2_capacity,jug1_capacity)
-    possibilities.append((jug1,jug2))
+    jug1_temp = fill(jug1, jug1_capacity)
+    possibilities.append((jug1_temp,jug2))
+    
+    jug2_temp = fill(jug2, jug2_capacity)
+    possibilities.append((jug1,jug2_temp))
+    
+    jug1_temp = discard(jug1)
+    possibilities.append((jug1_temp,jug2))
+    
+    jug2_temp = discard(jug2)
+    possibilities.append((jug1,jug2_temp))
+    
+    jug1_temp,jug2_temp = pour(jug1,jug2,jug1_capacity,jug2_capacity)
+    possibilities.append((jug1_temp,jug2_temp))
+    
+    jug2_temp,jug1_temp = pour(jug2,jug1,jug2_capacity,jug1_capacity)
+    possibilities.append((jug1_temp,jug2_temp))
     return possibilities
 
 def check(jug1, jug2, goal_capacity):
@@ -54,6 +47,7 @@ def solve(s, jug1_capacity, jug2_capacity, goal_capacity):
     jug2 = 0
     visited = []
     push(s,(jug1,jug2))
+    print()
     while(len(s)!=0):
         jug1,jug2 = pop(s)
         if(check(jug1,jug2,goal_capacity)):
